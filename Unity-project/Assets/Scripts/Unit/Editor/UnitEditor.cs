@@ -11,9 +11,6 @@ namespace Bohemia
             var unit = (Unit)target;
             var sensor = unit.Sensor;
 
-            if (sensor == null)
-                return;
-
             var unitPosition = unit.Sensor.RaycastPoint.position;
             var halfAngle = sensor.ViewAngle * 0.5f;
 
@@ -29,11 +26,11 @@ namespace Bohemia
             Handles.DrawLine(unitPosition, viewAngleAWorld);
             Handles.DrawLine(unitPosition, viewAngleBWorld);
 
-            foreach (var visibleTarget in sensor.VisibleTargets)
-            {
-                Handles.color = Color.red;
-                Handles.DrawLine(unitPosition, visibleTarget.Position);
-            }
+            // foreach (var visibleTarget in sensor.VisibleUnits)
+            // {
+            //     Handles.color = Color.red;
+            //     Handles.DrawLine(unitPosition, visibleTarget.Position);
+            // }
         }
     }
 }
