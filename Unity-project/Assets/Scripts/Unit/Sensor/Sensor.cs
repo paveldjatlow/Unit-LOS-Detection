@@ -1,23 +1,18 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Bohemia
 {
-    public sealed class Sensor : MonoBehaviour
+    public sealed class Sensor : CachedTransformObject
     {
-        [field: SerializeField] public Transform RaycastPoint { get; private set; }
+        [SerializeField] private LayerMask _layerMask;
 
-        private Transform _transform => transform;
+        [field: SerializeField] public Transform RaycastPoint { get; private set; }
 
         public float ViewRadius { get; private set; }
         public float ViewAngle { get; private set; }
 
-        public List<IDetectable> VisibleTargets { get; } = new();
-
         internal void Init(float viewRadius, float viewAngle)
         {
-            // _transform = transform;
-
             ViewRadius = viewRadius;
             ViewAngle = viewAngle;
         }
@@ -25,7 +20,7 @@ namespace Bohemia
         public Vector3 DirectionFromAngle(float angleInDegrees, bool isGlobal)
         {
             if (isGlobal == false)
-                angleInDegrees += _transform.eulerAngles.y;
+                angleInDegrees += Transform.eulerAngles.y;
 
             var x = Mathf.Sin(angleInDegrees * Mathf.Deg2Rad);
             var z = Mathf.Cos(angleInDegrees * Mathf.Deg2Rad);
@@ -33,37 +28,56 @@ namespace Bohemia
             return new Vector3(x, 0, z);
         }
 
-        internal void FindVisibleTargets()
+        // internal void FindVisibleTargets()
+        // {
+        //     foreach (var visible in VisibleUnits)
+        //         visible.SetDetected(false);
+        //
+        //     VisibleUnits.Clear();
+        //
+        //     var results = new Collider[10];
+        //     var size = Physics.OverlapSphereNonAlloc(RaycastPoint.position, ViewRadius, results);
+        //
+        //     for (var i = 0; i < size; i++)
+        //     {
+        //         var target = results[i].transform;
+        //         var positionDifference = target.position - RaycastPoint.position;
+        //
+        //         var directionToTarget = positionDifference.normalized;
+        //
+        //         if (Vector3.Angle(Transform.forward, directionToTarget) >= ViewAngle * 0.5f)
+        //             continue;
+        //
+        //         var distanceToTarget = positionDifference.magnitude;
+        //         var obstaclesLayerMask = LayerMask.GetMask("Obstacles");
+        //
+        //         if (Physics.Raycast(RaycastPoint.position, directionToTarget, distanceToTarget, obstaclesLayerMask))
+        //             continue;
+        //
+        //         if (target.TryGetComponent(out Unit unit) == false)
+        //             continue;
+        //
+        //         unit.SetDetected(true);
+        //         VisibleUnits.Add(unit);
+        //     }
+        // }
+
+        internal bool IsVisible(Unit target)
         {
-            foreach (var visible in VisibleTargets)
-                visible.SetDetected(false);
+            var positionDifference = target.Position - RaycastPoint.position;
+            var directionToTarget = positionDifference.normalized;
 
-            VisibleTargets.Clear();
+            if (Vector3.Angle(Transform.forward, directionToTarget) >= ViewAngle * 0.5f)
+                return false;
 
-            Collider[] targets = Physics.OverlapSphere(RaycastPoint.position, ViewRadius);
+            var distanceToTarget = positionDifference.magnitude;
 
-            for (var i = 0; i < targets.Length; i++)
-            {
-                var target = targets[i].transform;
-                var positionDifference = target.position - RaycastPoint.position;
+            if (distanceToTarget > ViewRadius)
+                return false;
 
-                var directionToTarget = positionDifference.normalized;
+            var hasObstacleHit = Physics.Raycast(RaycastPoint.position, directionToTarget, distanceToTarget, _layerMask);
 
-                if (Vector3.Angle(_transform.forward, directionToTarget) >= ViewAngle * 0.5f)
-                    continue;
-
-                var distanceToTarget = positionDifference.magnitude;
-                var obstaclesLayerMask = LayerMask.GetMask("Obstacles");
-
-                if (Physics.Raycast(RaycastPoint.position, directionToTarget, distanceToTarget, obstaclesLayerMask))
-                    continue;
-
-                if (target.TryGetComponent(out IDetectable visible) == false)
-                    continue;
-
-                visible.SetDetected(true);
-                VisibleTargets.Add(visible);
-            }
+            return hasObstacleHit == false;
         }
     }
 }
