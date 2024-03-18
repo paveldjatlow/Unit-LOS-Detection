@@ -11,6 +11,14 @@ namespace Bohemia
             var unit = (Unit)target;
             var sensor = unit.Sensor;
 
+            DrawFieldOfView(unit, sensor);
+        }
+
+        /// <summary>
+        /// Draw the field of view of the unit if it's selected
+        /// </summary>
+        private static void DrawFieldOfView(Unit unit, Sensor sensor)
+        {
             var unitPosition = unit.Sensor.RaycastPoint.position;
             var halfAngle = sensor.ViewAngle * 0.5f;
 
@@ -26,11 +34,11 @@ namespace Bohemia
             Handles.DrawLine(unitPosition, viewAngleAWorld);
             Handles.DrawLine(unitPosition, viewAngleBWorld);
 
-            // foreach (var visibleTarget in sensor.VisibleUnits)
-            // {
-            //     Handles.color = Color.red;
-            //     Handles.DrawLine(unitPosition, visibleTarget.Position);
-            // }
+            foreach (var visibleTarget in sensor.DetectedUnits)
+            {
+                Handles.color = Color.red;
+                Handles.DrawLine(unitPosition, visibleTarget.Position);
+            }
         }
     }
 }
