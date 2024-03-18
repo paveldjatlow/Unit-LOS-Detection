@@ -3,29 +3,61 @@ using UnityEngine;
 
 namespace Bohemia
 {
-    public sealed class Unit : CachedTransformObject, IEquatable<Unit>
+    public sealed class Unit : CachedTransformObject
     {
+        [field: SerializeField] public Sensor Sensor { get; private set; }
+
+        [SerializeField] private UnitSettings _settings;
         [SerializeField] private UnitView _view;
-        [SerializeField] private Sensor _sensor;
+
+        internal int Id;
+        private int _team;
 
         private bool _isDetected;
 
-        public Sensor Sensor => _sensor;
         public Vector3 Position => Transform.position;
+        internal Vector2 Position2D => new(Position.x, Position.z);
 
-        internal int Id { get; private set; }
+        internal UnitMovement Movement { get; private set; }
 
-        internal void Init()
+        internal void Init(EUnitTeam team, Vector3 position, Transform parent, Vector2 worldSize)
         {
-            _sensor.Init(10, 90);
+            _team = (int)team;
+
+            Transform.SetParent(parent);
+            Transform.localPosition = position;
+
+            Sensor.Init(_settings.ViewRadius, _settings.ViewAngle);
+            Movement = new UnitMovement(this, _settings.MovementSpeed, worldSize);
+
+            InitFlag(team);
         }
 
+        /// <summary>
+        /// The id is set by the unit storage
+        /// </summary>
         internal void SetId(int id)
         {
             Id = id;
         }
 
-        public void SetDetected(bool value)
+        /// <summary>
+        /// Sets the visual flag of the unit
+        /// </summary>
+        private void InitFlag(EUnitTeam team)
+        {
+            var flagColor = team switch
+            {
+                EUnitTeam.Red => _settings.RedTeamColor,
+                EUnitTeam.Green => _settings.GreenTeamColor,
+                EUnitTeam.Blue => _settings.BlueTeamColor,
+                _ => throw new ArgumentOutOfRangeException(nameof(team), team, null)
+            };
+
+            _view.Init(flagColor, _settings.DefaultColor, _settings.VisibleColor);
+        }
+
+        internal void SetDetected(bool value)
         {
             if (_isDetected == value)
                 return;
@@ -35,23 +67,15 @@ namespace Bohemia
             _view.SetAsDetected(value);
         }
 
-        public bool Equals(Unit other)
+        /// <summary>
+        /// Should the compared unit be ignored by the sensor
+        /// </summary>
+        internal bool IsIgnored(Unit other)
         {
-            if (ReferenceEquals(null, other))
-                return false;
-            if (ReferenceEquals(this, other))
+            if (other.Id == Id)
                 return true;
-            return base.Equals(other) && Id == other.Id;
-        }
 
-        public override bool Equals(object obj)
-        {
-            return ReferenceEquals(this, obj) || obj is Unit other && Equals(other);
-        }
-
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(base.GetHashCode(), Id);
+            return other._team == _team;
         }
     }
 }
