@@ -166,15 +166,14 @@ MonoBehaviour:
   _unitSpawners:
   - {fileID: 791761670}
   - {fileID: 1234668050}
-  - {fileID: 825450950}
   _unitSettings: {fileID: 11400000, guid: 18c1d9938c695a143a0e10e762e37a95, type: 2}
   _obstacleSpawner: {fileID: 952392000}
-  _worldSize: {x: 3000, y: 3000}
-  _bodiesPerNode: 6
-  _maxSplits: 6
+  _worldSize: {x: 100, y: 100}
+  _bodiesPerNode: 4
+  _maxSplits: 15
   _visibilityDetectorTick: 0.5
   _quadTreeTick: 1
-  _unitsMoverTick: 0.2
+  _unitsMoverTick: 0.5
 --- !u!1 &260899808
 GameObject:
   m_ObjectHideFlags: 0
@@ -314,8 +313,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _template: {fileID: 797945324088755786, guid: b6529b2f5619ebb4999e51078114a672, type: 3}
   _team: 0
-  _unitsCount: 100
-  _spawnAreaSize: {x: 800, y: 800}
+  _unitsCount: 5
+  _spawnAreaSize: {x: 10, y: 10}
 --- !u!4 &791761671
 Transform:
   m_ObjectHideFlags: 0
@@ -326,54 +325,6 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &825450949
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 825450951}
-  - component: {fileID: 825450950}
-  m_Layer: 0
-  m_Name: Blue UnitSpawner
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &825450950
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 825450949}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7bb5df940650496bb20b48fbefcd55b9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _template: {fileID: 797945324088755786, guid: b6529b2f5619ebb4999e51078114a672, type: 3}
-  _team: 2
-  _unitsCount: 100
-  _spawnAreaSize: {x: 800, y: 800}
---- !u!4 &825450951
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 825450949}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2000, y: 0, z: 2000}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -409,7 +360,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _template: {fileID: 4391025828183040173, guid: 3be3a70ba0426344e8fef816a4215cdc, type: 3}
-  _obstaclesCount: 1000
+  _obstaclesCount: 10
 --- !u!4 &952392001
 Transform:
   m_ObjectHideFlags: 0
@@ -548,8 +499,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _template: {fileID: 797945324088755786, guid: b6529b2f5619ebb4999e51078114a672, type: 3}
   _team: 1
-  _unitsCount: 100
-  _spawnAreaSize: {x: 800, y: 800}
+  _unitsCount: 5
+  _spawnAreaSize: {x: 10, y: 10}
 --- !u!4 &1234668051
 Transform:
   m_ObjectHideFlags: 0
@@ -559,7 +510,7 @@ Transform:
   m_GameObject: {fileID: 1234668049}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1000, y: 0, z: 1000}
+  m_LocalPosition: {x: 5, y: 0, z: 5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -573,6 +524,5 @@ SceneRoots:
   - {fileID: 100538911}
   - {fileID: 791761671}
   - {fileID: 1234668051}
-  - {fileID: 825450951}
   - {fileID: 952392001}
   - {fileID: 260899812}
